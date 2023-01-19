@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TestLog report for moodle</title>
+    <style>
+/* RESET + System font stack */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+body, h1, h2, h3, h4, p, figure, blockquote, dl, dd {
+    margin: 0;
+}
+ul[role='list'], ol[role='list'] {
+    list-style: none;
+}
+html:focus-within {
+    scroll-behavior: smooth;
+}
+:not([class]) {
+    text-decoration-skip-ink: auto;
+}
+img, picture {
+    max-width: 100%;
+    display: block;
+}
+input, button, textarea, select {
+    font: inherit;
+}
+@font-face {
+    font-family: system;
+    font-style: normal;
+    font-weight: 300;
+    src: local(".SFNSText-Light"), local(".HelveticaNeueDeskInterface-Light"), local(".LucidaGrandeUI"), local("Ubuntu Light"), local("Segoe UI Light"), local("Roboto-Light"), local("DroidSans"), local("Tahoma");
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+    font-family: "system";
+}
+/* / RESET + System font stack */
+:root {
+  --body-background: #fafafa;
+  --body-color: #555;
+  --header-background-color:#448;
+  --th-background-color:#EEE;
+  --th-link-color: blue;
+  --th-link-visited-color: rgb(75,0,130);
+  --line-hover-color:#555;
+  --line-hover-background-color: yellow;
+  --table-remarks-text-color: #666;
+  --step-remarks-color:#336;
+  --error-color:#600;
+}
+
+body{
+    background-color:var(--body-background);
+    color:var(--body-color);
+}
+
+header {
+    margin: 0;
+    padding: 0.5em;
+    background-color:var(--header-background-color);
+    color: #EEF;
+}
+
+header a {
+    color: white;
+    transition: all .3s linear;
+}
+
+header a.btn {
+    text-decoration: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: inline-block;
+    margin-right: 1em;
+    padding: 5px;
+}
+
+header a.btn-sm {
+    font-size: 8pt;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+header a:hover {
+    text-decoration: none;
+    color: yellow;
+    border-color: yellow;
+    background-color: #88B;
+}
+
+header a:active {
+    text-decoration: none;
+    background-color: #00F;
+}
+
+header h1 em {
+    color: #96df20;
+}
+
+.content {
+    margin: 0 1em;
+}
+
+footer {
+    margin: auto 0 0 0;
+    padding: 0.5em;
+    background-color:#448;
+    color: #EEF;
+    font-size: 10pt;
+}
+
+footer a {
+    color: #FF8;
+}
+footer a:hover {
+    color: #F8F;
+}
+footer a:active {
+    color: #FFF;
+}
+
+
+.tableEmt table td, .tableEmt table th {
+    border-top: 1px solid black;
+}
+.tableEmt table {
+    border-bottom: 1px solid black;
+}
+
+.tableEmt table th {
+    background-color: var(--th-background-color);
+}
+
+.tableEmt table td, .tableEmt table th {
+    padding: .5em;
+}
+
+.tableEmt table th.fieldName {
+    text-align: left;
+}
+
+.tableEmt .remarks {
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+    color:var(--table-remarks-text-color);
+}
+
+.stepEmt {
+    display: grid;
+    grid-template-columns: 9em 1fr;
+    grid-template-rows: 1fr 1fr;
+    padding: .2em;
+    border-top: 1px solid #888;
+}
+
+.stepEmt:last-child {
+    border-bottom: 1px solid #888;
+}
+
+.stepEmt .stepType {
+    grid-column: 1;
+    grid-row: 1/3;
+    background-color: #448;
+    color: #EEF;
+    padding: .5em;
+    align-content: center;
+}
+
+.stepEmt .stepText {
+    padding: .5em;
+    grid-column: 2;
+    grid-row: 1;
+}
+.stepEmt .stepRemarks {
+    padding: .5em;
+    grid-column: 2;
+    grid-row: 2;
+    color: var(--step-remarks-color);
+}
+
+.logEmt {
+    display: grid;
+    grid-template-columns: 9em 11em 1fr;
+    grid-template-rows: 3em 1fr;
+    padding: .2em;
+    border-top: 1px solid #888;
+}
+
+.logEmt:last-child {
+    border-bottom: 1px solid #888;
+}
+
+.logEmt .logType {
+    grid-column: 1;
+    grid-row: 1/3;
+    background-color: #448;
+    color: #EEF;
+    padding: .5em;
+    align-content: center;
+}
+
+.logEmt .logImg {
+    grid-column: 1;
+    grid-row: 2;
+    background-color: #448;
+    color: #EEF;
+    padding: .5em;
+    align-content: center;
+}
+
+.logEmt .logTime {
+    padding: .5em;
+    grid-column: 2;
+    grid-row: 1;
+}
+.logEmt .logLevel {
+    padding: .5em;
+    grid-column: 3;
+    grid-row: 1;
+}
+.logEmt .logRemarks {
+    padding: .5em;
+    grid-column: 2/4;
+    grid-row: 2;
+    color: #336;
+}
+
+table.indexTable {
+    font-size: 9pt;
+}
+
+table.indexTable th {
+    text-align: left;
+    background-color: var(--th-background-color);
+    padding: .2em;
+}
+
+table.indexTable th a {
+    color:var(--th-link-color);
+}
+
+table.indexTable th a:visited {
+    color:var(--th-link-visited-color);
+}
+
+table.indexTable th.combiName {
+    background-color: #DDD;
+}
+table.indexTable td {
+    padding: .2em;
+}
+
+
+table.indexTable td:last-child > * {
+    flex:2;
+}
+table.indexTable td:last-child span.result-badge {
+    justify-content:start;
+}
+
+table.indexTable tbody tr:hover {
+    background-color: var(--line-hover-background-color);
+    color:var(--line-hover-color);
+}
+
+table.indexTable tbody tr:hover th {
+    background-color: var(--line-hover-background-color);
+}
+
+table.indexTable tbody tr:hover th a{
+    color:var(--line-hover-color);
+    background-color:var(--line-hover-background-color);
+}
+
+details {
+    margin: 0 1em;
+}
+.varFilters {
+    columns: 4;
+    column-gap: .5em;
+    font-size: 0.9em;
+}
+.varFilter {
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid #EEE;
+    margin: .2em 0;
+}
+.varFilter .name {
+    font-weight: bold;
+    margin-right: 1em;
+}
+.varFilter .vals {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.value {
+    margin-bottom: .1em;
+}
+
+.value button {
+    margin: 0;
+    border-radius: 0;
+    border: 1px solid #000;
+    background-color: #EEE;
+    width: 25px;
+}
+.value button:first-of-type{
+    border-radius: 5px 0 0 5px;
+}
+.value button:last-of-type{
+    border-radius: 0 5px 5px 0;
+}
+.value button.active {
+    color: #FFA;
+    background-color: #660;
+}
+.value button:hover {
+    color: blue;
+    background-color: #FF8;
+}
+
+ul.run-metadata {
+    list-style: none;
+    padding: .5em;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+}
+
+ul.run-metadata li {
+    display: inline-block;
+    margin: 0 .5em;
+    font-size: 10pt;
+    white-space: nowrap;
+}
+
+ul.run-metadata li.flush {
+    margin-left:auto;
+}
+
+ul.run-metadata li:last-of-type {
+    margin-right: 0;
+}
+
+ul.run-metadata span.key {
+    color: #BBE;
+    margin-right: .5em;
+}
+
+ul.run-metadata span.value {
+    color: #e27d7d;
+    font-weight: bold;
+    font-size: smaller;
+    font-family: Monaco, Consolas, "Courier New", monospace;
+}
+ul.run-metadata span.result-ERROR {
+    color:var(--error-color);
+}
+.rs-badge {
+    display: inline-block;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+.rs-badge-log {
+    background-color: #448;
+    color: #FFF;
+}
+.rs-badge-random {
+    background-color: #884;
+    color: #FFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --body-background: #212529;
+    --body-color: #f1f1f1;
+    --th-background-color:#32393f;
+    --th-link-color:#eee;
+    --th-link-visited-color: #eee;
+    --line-hover-color:black;
+    --line-hover-background-color:#c8c8c8;
+    --table-remarks-text-color:#afafff;
+    --step-remarks-color:#afafff;
+    --problem-color: #ffd6d6;
+  }
+}
+.result-badge {
+    height: fit-content;
+    border-radius: 4px 0 4px 0;
+    padding: 4px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.25);
+}
+.result-OK {
+    background-color: #55C;
+    color: #FFFFFF;
+}
+.result-SUCCESS {
+    background-color: #5c5;
+    color: #FFFFFF;
+}
+.result-FAIL {
+    background-color: #F00; 
+    color: #FFFFFF;
+}
+.result-ERROR {
+    background-color: #FF0; 
+    color: var(--error-color);
+}
+.result-TERMINATED {
+    background-color: #E26310;
+    color: #F8D496;
+}
+.result-bar {
+    display:grid;
+    grid-auto-columns:1fr;
+    width:100%; 
+    column-gap:5px;
+    grid-auto-flow:column; 
+    text-align:center;
+}
+.result-bar .result-badge {
+    margin:0;
+    border-radius: 5px;
+}
+    </style>
+    <script>
+      const rows = [{"runSource":":random","startTime":"2023-01-15 11:17:42","id":1,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 11:20:20","id":2,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 11:21:41","id":3,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 11:25:41","id":4,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 11:29:18","id":5,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 12:57:17","id":6,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:10:36","id":7,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:17:08","id":8,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:21:09","id":9,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:30:08","id":10,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:32:16","id":11,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:33:09","id":12,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:33:27","id":13,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:34:39","id":14,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:39:12","id":15,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:40:35","id":16,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:46:47","id":17,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:47:28","id":18,"projectName":"moodle"},{"runSource":":random","startTime":"2023-01-15 13:49:48","id":19,"projectName":"moodle"}];
+    </script>
+</head>
+<body>
+<header>
+    <div class="logo">Provengo Tests Report</div>
+    <h1>Test Log Report for <em>moodle</em></h1>
+    <p>Path: <code><a href="file://C:\Users\mikid\Desktop\QA HW3\GOOD\sqe-hw3\Provengo\moodle">C:\Users\mikid\Desktop\QA HW3\GOOD\sqe-hw3\Provengo\moodle</a></code></p>
+</header>
+
+<table class="indexTable">
+    <thead>
+        <tr>
+            <th>Suites</th>
+            <th>Run Source</th>
+            <th>Run Count</th>
+            <th>Start Time</th>
+            <th>Duration</th>
+            <th>Results</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="runRow1">
+            <th><a href="suites/suite-1/index.html">Suite-1</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T11:17:42</td>
+            <td>0:00:00</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-ERROR">Error:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow2">
+            <th><a href="suites/suite-2/index.html">Suite-2</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T11:20:20</td>
+            <td>0:00:00</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-ERROR">Error:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow3">
+            <th><a href="suites/suite-3/index.html">Suite-3</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T11:21:41</td>
+            <td>0:00:00</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-ERROR">Error:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow4">
+            <th><a href="suites/suite-4/index.html">Suite-4</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T11:25:41</td>
+            <td>0:00:00</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-ERROR">Error:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow5">
+            <th><a href="suites/suite-5/index.html">Suite-5</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T11:29:18</td>
+            <td>0:00:13</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow6">
+            <th><a href="suites/suite-6/index.html">Suite-6</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T12:57:17</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow7">
+            <th><a href="suites/suite-7/index.html">Suite-7</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:10:36</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow8">
+            <th><a href="suites/suite-8/index.html">Suite-8</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:17:08</td>
+            <td>0:00:02</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow9">
+            <th><a href="suites/suite-9/index.html">Suite-9</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:21:09</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow10">
+            <th><a href="suites/suite-10/index.html">Suite-10</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:30:08</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow11">
+            <th><a href="suites/suite-11/index.html">Suite-11</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:32:16</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow12">
+            <th><a href="suites/suite-12/index.html">Suite-12</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:33:09</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-ERROR">Error:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow13">
+            <th><a href="suites/suite-13/index.html">Suite-13</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:33:27</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow14">
+            <th><a href="suites/suite-14/index.html">Suite-14</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:34:39</td>
+            <td>0:00:02</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow15">
+            <th><a href="suites/suite-15/index.html">Suite-15</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:39:12</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow16">
+            <th><a href="suites/suite-16/index.html">Suite-16</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:40:35</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow17">
+            <th><a href="suites/suite-17/index.html">Suite-17</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:46:47</td>
+            <td>0:00:00</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow18">
+            <th><a href="suites/suite-18/index.html">Suite-18</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:47:28</td>
+            <td>0:00:01</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+        <tr id="runRow19">
+            <th><a href="suites/suite-19/index.html">Suite-19</a></th>
+            <td>
+                <span class="rs-badge rs-badge-random">:random</span>
+            </td>
+            <td>1</td>
+            <td>2023-01-15T13:49:48</td>
+            <td>0:00:02</td>
+            <td>
+               <div class="result-bar">
+                        <span class="result-badge result-SUCCESS">Success:1</span>
+               </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<footer>
+    2023-01-15 13:49:57 Created with <a href="https://provengo.tech/?utm=log">Provengo</a>.
+</footer>
+<script>
+  const MODES = ['NOT', 'IGNORE']
+  MODES.NOT = MODES[0]
+  MODES.IGN = MODES[1]
+  const filters = {}
+
+  function updateFilter(filter, value, mode) {
+    const key = filter + '\n' + value
+    if (mode === MODES.IGN) {
+      delete filters[key]
+    } else {
+      filters[key] = mode
+    }
+
+    // prepare filters, [K1, E]
+    // where K1: filter name, E expected value
+    const filterKVs = []
+    Object.keys(filters).forEach(f => {
+      const cs = f.split('\n')
+      filterKVs.push([cs[0], cs[1]])
+    })
+
+    if (filterKVs.length === 0) {
+      document.querySelectorAll('table tbody tr').forEach(r => r.style.display = '')
+
+    } else {
+      // filter rows
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i]
+        let shouldShow = true
+        filterKVs.forEach(f => {
+          if (shouldShow) {
+            const rowValue = row[f[0]]
+            const filterValue = f[1]
+            shouldShow = (filterValue !== rowValue)
+          }
+        })
+        const tableRow = document.getElementById('runRow' + (i + 1))
+        tableRow.style.display = (shouldShow ? '' : 'none')
+      }
+    }
+  }
+
+  function setup() {
+    // detect button triplets
+    document.querySelectorAll('.varFilter').forEach(vf => {
+      const filterName = vf.dataset.filter
+      const valueDivs = vf.getElementsByClassName('value')
+      for (let index = 0; index < valueDivs.length; index++) {
+        const vd = valueDivs[index]
+        const value = vd.dataset.value
+        const buttons = Array.from(vd.getElementsByTagName('button'))
+
+        const resetAll = () => buttons.forEach(b => b.classList.remove('active'))
+        buttons.forEach((btn, idx) => {
+          btn.addEventListener('click', e => {
+            resetAll()
+            btn.classList.add('active')
+            updateFilter(filterName, value, MODES[idx])
+          })
+        })
+
+      }
+
+    })
+
+  }
+
+  if (document.readyState !== 'loading') {
+    setup()
+
+  } else {
+    document.addEventListener('DOMContentLoaded', setup)
+  }
+</script>
+</body>
+</html>
